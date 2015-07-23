@@ -1,0 +1,54 @@
+﻿#Login, #Register {
+	margin: 0;
+	width: 400px;
+	margin: 50px auto;
+	border: 2px solid black;
+}
+
+	#Login h1, #Register h1 {
+		color: #FFFFFF;
+		padding: 10px;
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+		background-color: #3852A4;
+	}
+
+	#Login h2, #Login h3, #Register h2, #Register h3, h4 {
+		color: #000000;
+		margin: 0 5%;
+		font-weight: 400;
+		font-size: large;
+		font-variant: small-caps;
+		background-color: #FFFFFF;
+	}
+
+	#Login h3, #Register h3, h4 {
+		text-align: center;
+	}
+
+	h4 {
+		color: #FF0000;
+	}
+
+	#Login input, #Register input {
+		width: 90%;
+		margin: 5%;
+		height: 50px;
+		display: block;
+	}
+
+	#Login input[type=button], #Register input[type=button] {
+		border: none;
+		color: #FFFFFF;
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+		background-color: #3852A4;
+	}
+
+	#Login input[type=text], #Login input[type=password], #Register input[type=text], #Register input[type=password] {
+		text-indent: 5%;
+		font-weight: 400;
+		font-size: x-large;
+	}

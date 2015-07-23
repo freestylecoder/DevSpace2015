@@ -1,0 +1,44 @@
+﻿CREATE TABLE Speakers (
+	Id				SMALLINT			IDENTITY(1,1)	NOT NULL,
+	EmailAddress	VARCHAR(100)						NOT NULL,
+	DisplayName		VARCHAR(46)							NOT NULL,
+	PasswordHash	VARBINARY(128)						NOT NULL,
+	Bio				VARCHAR(MAX)						NULL,
+	Twitter			VARCHAR(15)							NULL,
+	Website			VARCHAR(230)						NULL,
+	DisplayEmail	BIT									NULL,
+	DisplayTwitter	BIT									NULL,
+	DisplayWebsite	BIT									NULL,
+	SessionToken	UNIQUEIDENTIFIER					NULL,
+	SessionExpires	DATETIME							NULL,
+
+	CONSTRAINT Speakers_PK PRIMARY KEY CLUSTERED ( Id ),
+	CONSTRAINT Speakers_IX UNIQUE NONCLUSTERED ( EmailAddress )
+)
+
+CREATE TABLE Sessions (
+	Id				SMALLINT			IDENTITY(1,1)	NOT NULL,
+	SpeakerId		SMALLINT							NOT NULL,
+	Title			VARCHAR(250)						NOT NULL,
+	Abstract		VARCHAR(MAX)						NOT NULL,
+	Notes			VARCHAR(MAX)						NULL,
+
+	CONSTRAINT Sessions_PK PRIMARY KEY CLUSTERED ( Id ),
+	CONSTRAINT Sessions_Speakers_FK FOREIGN KEY ( SpeakerId ) REFERENCES Speakers ( Id ) ON UPDATE CASCADE ON DELETE CASCADE
+)
+
+CREATE TABLE Tags (
+	Id				SMALLINT			IDENTITY(1,1)	NOT NULL,
+	Text			VARCHAR(100)						NOT NULL,
+
+	CONSTRAINT Tags_PK PRIMARY KEY CLUSTERED ( Id )
+)
+
+CREATE TABLE SessionTags (
+	SessionId		SMALLINT							NOT NULL,
+	TagId			SMALLINT							NOT NULL,
+
+	CONSTRAINT SessionTags_PK PRIMARY KEY CLUSTERED ( SessionId, TagId ),
+	CONSTRAINT SessionTags_Tags_FK FOREIGN KEY ( TagId ) REFERENCES Tags ( Id ) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT SessionTags_Sessions_FK FOREIGN KEY ( SessionId ) REFERENCES Sessions ( Id ) ON UPDATE CASCADE ON DELETE CASCADE
+)

@@ -1,0 +1,237 @@
+﻿body {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: xx-large;
+	font-weight: 900;
+	margin-bottom: 20px;
+	line-height: 40px;
+}
+
+h2 {
+	font-size: x-large;
+	font-weight: 800;
+	margin-bottom: 20px;
+	line-height: 30px;
+}
+
+h3 {
+	font-size: large;
+	font-weight: 700;
+	margin-bottom: 20px;
+	line-height: 20px;
+}
+
+p {
+	margin-bottom: 20px;
+}
+
+header {
+	z-index:5;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 50px;
+	position: fixed;
+	background-color: #3852A4;
+}
+			
+	header #MenuButton {
+		display: none;
+	}
+
+	header img {
+		float: left;
+		margin-top: 13px;
+		margin-left: 50px;
+		margin-right: 15px;
+	}
+
+	header menu {
+		margin: 0;
+		padding: 0;
+		margin-top: 13px;
+	}
+
+	header ul {
+		padding: 0;
+		margin-left: 50px;
+	}
+
+	header li {
+		color: white;
+		font-size: xx-large;
+		font-weight: 600;
+		font-variant: small-caps;
+
+		padding-left: 15px;
+		padding-right: 15px;
+
+		display: inline-block;
+		list-style-type: none;
+	}
+
+	header a {
+		color: white;
+		text-decoration: none;
+	}
+
+#Sponsors {
+	top: 50px;
+	right: 0;
+	height: 50%;
+	width: 250px;
+	position: absolute;
+	text-align: center;
+	padding-right: 50px;
+}
+
+#Content {
+	padding-top: 50px;
+	padding-left: 50px;
+	padding-right: 350px;
+}
+
+	#Content #ContentHeader {
+		text-align: center;
+	}
+
+	#Content article {
+		margin: 0;
+		width: 80%;
+		min-width: 500px;
+		max-width: 800px;
+		margin: 50px auto;
+		border: 2px solid black;
+	}
+
+	#Content article h1 {
+		color: #FFFFFF;
+		padding: 10px;
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+		background-color: #3852A4;
+	}
+
+	#Content h2, #Content h3, #Content h4 {
+		color: #000000;
+		margin: 0 5%;
+		font-weight: 400;
+		font-size: large;
+		font-variant: small-caps;
+		background-color: #FFFFFF;
+	}
+
+	#Content h3, #Content h4 {
+		text-align: center;
+	}
+
+	#Content article p {
+		padding: 10px;
+	}
+
+	#Content h1 a {
+		color: white;
+		text-decoration: none;
+	}
+
+#EventBriteTickets {
+	width: 100%;
+	height: 500px;
+	display: block;
+	text-align: left;
+}
+
+@media only screen and (max-width: 1025px) {
+	header {
+		height: 100px;
+	}
+
+		header img {
+			margin-top: 37px;
+		}
+
+		header #MenuButton {
+			display: block;
+		}
+
+		header menu {
+			right: 0;
+			top: 87px;
+			width: 200px;
+			height: 100%;
+			position: fixed;
+			text-align: right;
+			background: #3852A4;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		header ul {
+			padding: 0;
+			margin-left: 50px;
+		}
+
+		header li {
+			color: white;
+			font-size: xx-large;
+			font-weight: 600;
+			font-variant: small-caps;
+
+			padding: 20px 10px;
+			display: list-item;
+			list-style-type: none;
+		}
+
+		header a {
+			color: white;
+			text-decoration: none;
+		}
+
+	#Sponsors {
+		top: 100px;
+	}
+
+	#Content {
+		padding-top: 100px;
+	}
+
+	#Content article {
+		width: 100%;
+		min-width: 250px;
+		max-width: 600px;
+	}
+
+	#EventBriteTickets {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: 860px) {
+	#Sponsors {
+		top: auto;
+		padding: 0;
+		right: auto;
+		width: 50%;
+		min-width: 250px;
+		height: auto;
+		display: block;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		clear: both;
+	}
+
+	#Content {
+		padding-right: 50px;
+	}
+
+	#EventBriteTickets {
+		display: none;
+	}
+}

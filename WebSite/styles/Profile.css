@@ -1,0 +1,129 @@
+﻿#Content div {
+	margin: 0;
+	width: 90%;
+	min-width: 400px;
+	max-width: 800px;
+	margin: 50px auto;
+	border: 2px solid black;
+}
+
+	#Content div h1 {
+		padding: 10px;
+		padding-left: 3%;
+
+		color: #FFFFFF;
+		background-color: #3852A4;
+
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+	}
+
+	#Content div h2, #Content div h3 {
+		margin: 0;
+		padding: 0;
+		padding-left: 3%;
+
+		color: #000000;
+		background-color: #FFFFFF;
+
+		font-size: large;
+		font-weight: 400;
+		font-variant: small-caps;
+	}
+
+	#Content div h3 {
+		text-align: center;
+	}
+
+	#Content div input, #Content div textarea {
+		width: 50%;
+		height: 50px;
+		min-width: 250px;
+
+		margin: 0;
+		margin-left: 3%;
+		margin-bottom: 25px;
+
+		display: block;
+	}
+
+	#Content div input[type=button] {
+		border: none;
+		color: #FFFFFF;
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+		background-color: #3852A4;
+	}
+
+	#Content div input[type=text], #Content div input[type=password] {
+		text-indent: 2%;
+		font-weight: 400;
+		font-size: x-large;
+	}
+
+	#Content div textarea {
+		width: 90%;
+		height: 200px;
+		min-width: 350px;
+
+		margin-left: 3%;
+		margin-right: 3%;
+		padding: 2%;
+		text-indent: 0;
+		font-weight: 400;
+		font-size: x-large;
+	}
+
+	#Content div table {
+		width: 90%;
+		min-width: 350px;
+
+		margin-left: 3%;
+		margin-right: 3%;
+		margin-bottom: 25px;
+
+		padding: 2%;
+		text-indent: 0;
+		font-weight: 400;
+		font-size: x-large;
+	}
+
+		#Content div table td {
+			width: 50px;
+			cursor: pointer;
+
+			text-align: left;
+			vertical-align: middle;
+		}
+
+		#Content div table td.Title {
+			width: auto;
+			cursor: auto;
+		}
+
+	#Session input[type=text] {
+		width: 94%;
+		min-width: 350px;
+	}
+
+	#Session ul {
+		width: 94%;
+		margin: 3%;
+		min-width: 350px;
+	}
+
+		#Session li {
+			width: 150px;
+			margin-right: 25px;
+			margin-bottom: 10px;
+
+			font-size: large;
+			font-weight: 400;
+			font-variant: small-caps;
+
+			cursor: pointer;
+			display: inline-block;
+			list-style-type: none;
+		}
