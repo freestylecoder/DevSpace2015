@@ -3,6 +3,7 @@
 	Self.Id = ko.observable();
 	Self.DisplayName = ko.observable();
 	Self.EmailAddress = ko.observable();
+	Self.Password = ko.observable();
 	Self.Bio = ko.observable();
 	Self.Twitter = ko.observable();
 	Self.Website = ko.observable();
@@ -61,6 +62,7 @@ function ViewModel() {
 	Self.Sessions = ko.observableArray([]);
 	Self.Tags = ko.observableArray([]);
 	Self.SelectedSession = ko.observable(new Session());
+	Self.Verify = ko.observable();
 
 	var ProfileRequest = new XMLHttpRequest();
 	ProfileRequest.withCredentials = true;
@@ -132,6 +134,7 @@ function ViewModel() {
 	Self.ShowProfile = function () {
 		document.getElementById('Profile').style.display = 'block';
 		document.getElementById('Session').style.display = 'none';
+		document.getElementById('Credentials').style.display = 'none';
 	}
 
 	Self.SaveProfile = function () {
@@ -157,9 +160,45 @@ function ViewModel() {
 		};
 	}
 
+	Self.ShowCredentials = function () {
+		document.getElementById('Profile').style.display = 'none';
+		document.getElementById('Session').style.display = 'none';
+		document.getElementById('Credentials').style.display = 'block';
+	}
+
+	Self.SaveCredentials = function () {
+		if (Self.Verify() != Self.Profile().Password()) {
+			alert('Password and Verify did not match');
+			return;
+		}
+
+		var Request = new XMLHttpRequest();
+		Request.withCredentials = true;
+		Request.open('POST', ApiUrl + 'Speakers/' + sessionStorage.getItem('Id'), true);
+		Request.setRequestHeader('Content-Type', 'application/json');
+		Request.send(ko.toJSON(Self.Profile));
+
+		Request.onreadystatechange = function () {
+			if (Request.readyState == Request.DONE) {
+				switch (Request.status) {
+					case 200:
+						Self.ShowProfile();
+						break;
+
+					case 400:
+						// Login failed
+
+					default:
+						break;
+				}
+			}
+		};
+	}
+
 	Self.ShowSession = function (data) {
 		document.getElementById('Profile').style.display = 'none';
 		document.getElementById('Session').style.display = 'block';
+		document.getElementById('Credentials').style.display = 'none';
 
 		if (data) {
 			Self.SelectedSession(data);

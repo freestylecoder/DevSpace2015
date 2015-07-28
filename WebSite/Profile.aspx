@@ -19,7 +19,8 @@
 		<input type="text" data-bind="value: Profile().Website" />
 		<h2>Bio</h2>
 		<textarea data-bind="value: Profile().Bio"></textarea>
-		<input type="button" data-bind="click: SaveProfile" value="SaveProfile" />
+		<input type="button" data-bind="click: SaveProfile" value="Save Profile" />
+		<input type="button" data-bind="click: ShowCredentials" value="Update Credentials" />
 		<h1>Sessions</h1>
 		<table>
 			<tbody id="SessionList" data-bind="foreach: Sessions">
@@ -51,6 +52,17 @@
 		<input type="text" id="NewTagText" style="width: 50%; display: inline-block;" />
 		<input type="button" value="Add New" style="width: 35%; display: inline-block;" data-bind="click: SaveTag" />
 		<input type="button" data-bind="click: SaveSession" value ="Save" />
+		<input type="button" data-bind="click: ShowProfile" value="Cancel" />
+	</div>
+	<div id="Credentials" style="display: none;">
+		<h1>Credentials</h1>
+		<h2>Email Address</h2>
+		<input type="text" data-bind="value: Profile().EmailAddress" />
+		<h2>Password</h2>
+		<input type="password" data-bind="value: Profile().Password" />
+		<h2>Verify</h2>
+		<input type="password" data-bind="value: Verify" />
+		<input type="button" data-bind="click: SaveCredentials" value="Save" />
 		<input type="button" data-bind="click: ShowProfile" value="Cancel" />
 	</div>
 </asp:Content>

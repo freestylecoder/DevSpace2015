@@ -53,7 +53,39 @@ namespace DevSpace.Api.Controllers {
 					return new HttpResponseMessage( HttpStatusCode.Unauthorized );
 				}
 
+				if( !string.IsNullOrWhiteSpace( NewSpeaker.Password ) ) {
+					NewSpeaker.PasswordHash = System.Security.Cryptography.SHA512Managed.Create().ComputeHash( Encoding.UTF8.GetBytes( NewSpeaker.EmailAddress + ":" + NewSpeaker.Password ) );
+				}
+
 				await NewSpeaker.Update( Connection );
+				return new HttpResponseMessage( HttpStatusCode.OK );
+			}
+		}
+
+		[Authorize]
+		public async Task<HttpResponseMessage> Post( Int16 Id, Models.Speaker NewSpeaker ) {
+			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
+				Connection.Open();
+
+				Models.Speaker ExistingRecord = await Models.Speaker.Select( Id, Connection );
+
+				// Register new profile
+				if( null == ExistingRecord ) {
+					return new HttpResponseMessage( HttpStatusCode.NotFound );
+				}
+
+				if( string.IsNullOrWhiteSpace( NewSpeaker.EmailAddress ) ) {
+					return new HttpResponseMessage( HttpStatusCode.BadRequest );
+				}
+
+				if( string.IsNullOrWhiteSpace( NewSpeaker.Password ) ) {
+					return new HttpResponseMessage( HttpStatusCode.BadRequest );
+				}
+
+				ExistingRecord.EmailAddress = NewSpeaker.EmailAddress;
+				ExistingRecord.Password = NewSpeaker.Password;
+
+				await ExistingRecord.Update( Connection );
 				return new HttpResponseMessage( HttpStatusCode.OK );
 			}
 		}
