@@ -14,7 +14,7 @@
 		<input type="text" id="Name" class="RegistrationField" tabindex="1" />
 		<h2>Email Address</h2>
 		<input type="text" id="Email" tabindex="2" />
-		<h2>Password</h2>
+		<h2><a onclick="GetToken();" tabindex="9" style="float: right; cursor: pointer;">Forgot</a>Password</h2>
 		<input type="password" id="Password" onkeypress="ActionOnEnter( event, Login );" tabindex="3" />
 		<h2 class="RegistrationField">Verify Password</h2>
 		<input type="password" id="Verify" onblur="VerifyPassword();" onkeypress="ActionOnEnter( event, Register );" class="RegistrationField" tabindex="4" />

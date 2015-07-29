@@ -14,6 +14,7 @@ namespace DevSpace.Api {
 
 			Config.MessageHandlers.Add( new Handlers.BasicAuthHandler() );
 			Config.MessageHandlers.Add( new Handlers.SessionHandler() );
+			Config.MessageHandlers.Add( new Handlers.ForcedAuthHandler() );
 
 			Config.MapHttpAttributeRoutes();
 

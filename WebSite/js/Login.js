@@ -33,6 +33,67 @@
 	document.body.style.cursor = 'wait';
 }
 
+var Forced = false;
+function Force() {
+	if (Forced)
+		return;
+
+	Forced = true;
+
+	var Token = window.location.search.substring(7);
+
+	var Request = new XMLHttpRequest();
+	Request.withCredentials = true;
+	Request.open('GET', ApiUrl + 'Login', true);
+	Request.setRequestHeader('Accept', 'text/plain');
+	Request.setRequestHeader('Authorization', 'Force ' + Token);
+	Request.send();
+
+	Request.onreadystatechange = function () {
+		if (Request.readyState == Request.DONE) {
+			document.body.style.cursor = '';
+			switch (Request.status) {
+				case 200:
+					sessionStorage.setItem('Id', Request.responseText);
+					window.location = 'Profile.aspx';
+					break;
+
+				default:
+					var ErrorMessage = document.getElementById('ErrorMessage');
+					ErrorMessage.innerText = "Invalid Token";
+					ErrorMessage.style.display = '';
+					break;
+			}
+		}
+	};
+
+	document.body.style.cursor = 'wait';
+}
+
+function GetToken() {
+	if ('' == document.getElementById('Email').value.trim()) {
+		alert('You must enter an email address.');
+		return;
+	}
+
+	var Request = new XMLHttpRequest();
+	Request.withCredentials = true;
+	Request.open('GET', ApiUrl + 'Login/?Email=' + document.getElementById('Email').value, true);
+	Request.setRequestHeader('Accept', 'text/plain');
+	Request.send();
+
+	Request.onreadystatechange = function () {
+		if (Request.readyState == Request.DONE) {
+			document.body.style.cursor = '';
+			var ErrorMessage = document.getElementById('ErrorMessage');
+			ErrorMessage.innerText = Request.responseText.trim( '"' );
+			ErrorMessage.style.display = '';
+		}
+	};
+
+	document.body.style.cursor = 'wait';
+}
+
 function Register() {
 	if (VerifyPassword()) {
 		var RequestJson = {
@@ -107,6 +168,10 @@ function ShowRegister() {
 }
 
 function ShowLogin() {
+	if (window.location.search.toUpperCase().indexOf("FORCE") > -1) {
+		Force();
+	}
+
 	var LoginFields = document.getElementsByClassName('LoginField');
 	var RegistrationFields = document.getElementsByClassName('RegistrationField');
 

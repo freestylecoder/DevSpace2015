@@ -110,6 +110,7 @@
     <Compile Include="Controllers\SpeakersController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Handlers\BasicAuthHandler.cs" />
+    <Compile Include="Handlers\ForcedAuthHandler.cs" />
     <Compile Include="Handlers\SessionHandler.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Speaker.cs" />
@@ -124,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Create.sql" />
+    <Content Include="Scripts\Update01.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
