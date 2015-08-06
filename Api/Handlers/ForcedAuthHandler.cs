@@ -38,7 +38,7 @@ namespace DevSpace.Api.Handlers {
 						
 						using( SqlCommand Command = new SqlCommand() ) {
 							Command.Connection = Connection;
-							Command.CommandText = "SELECT EmailAddress FROM Speakers WHERE Id IN ( SELECT Id FROM Tokens WHERE Token = @Token )";
+							Command.CommandText = "SELECT EmailAddress FROM Speakers WHERE Id IN ( SELECT SpeakerId FROM Tokens WHERE Token = @Token )";
 							Command.Parameters.Add( "Token", System.Data.SqlDbType.UniqueIdentifier ).Value = Token;
 
 							using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
