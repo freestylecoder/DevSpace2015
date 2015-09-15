@@ -30,56 +30,61 @@ p {
 
 header {
 	z-index:5;
-	margin: 0;
-	padding: 0;
 	width: 100%;
 	height: 50px;
 	position: fixed;
 	background-color: #3852A4;
 }
-			
+
+header.expanded {
+	height: 100px;
+}
+
+header .submenu {
+	top: 50px;
+	clear: both;
+	position:fixed;
+}
+
 	header #MenuButton {
 		display: none;
 	}
 
-	header img {
+	header h1 {
 		float: left;
-		margin-top: 13px;
 		margin-left: 50px;
-		margin-right: 15px;
+		margin-bottom: 0;
+
+		color: white;
+		font-weight: 600;
+		line-height: 50px;
+		font-size: xx-large;
+		font-variant: small-caps;
+
+		cursor: pointer;
 	}
 
 	header menu {
-		margin: 0;
-		padding: 0;
-		margin-top: 13px;
-	}
-
-	header ul {
-		padding: 0;
-		margin-left: 50px;
+		float: right;
+		margin-right: 25px;
 	}
 
 	header li {
-		color: white;
-		font-size: xx-large;
-		font-weight: 600;
-		font-variant: small-caps;
-
-		padding-left: 15px;
-		padding-right: 15px;
-
+		padding: 0 25px;
+		line-height: 50px;
 		display: inline-block;
 		list-style-type: none;
-	}
 
-	header a {
 		color: white;
-		text-decoration: none;
+		font-weight: 600;
+		font-size: x-large;
+		font-variant: small-caps;
+
+		cursor: pointer;
 	}
 
 #Sponsors {
-	top: 50px;
+	top: 100px;
 	right: 0;
 	height: 50%;
 	width: 250px;
@@ -88,8 +93,35 @@ header {
 	padding-right: 50px;
 }
 
+	#Sponsors article {
+		margin: 50px 0;
+		border: 2px solid black;
+	}
+
+	#Sponsors article h1 {
+		color: #FFFFFF;
+		padding: 10px;
+		font-weight: 600;
+		font-size: xx-large;
+		font-variant: small-caps;
+		background-color: #3852A4;
+	}
+
+	#Sponsors h2, #Sponsors h3, #Sponsors h4 {
+		color: #000000;
+		margin: 0 5%;
+		font-weight: 400;
+		font-size: large;
+		font-variant: small-caps;
+		background-color: #FFFFFF;
+	}
+
+	#Sponsors article p {
+		padding: 10px;
+	}
+
 #Content {
-	padding-top: 50px;
+	padding-top: 100px;
 	padding-left: 50px;
 	padding-right: 350px;
 }
@@ -145,22 +177,30 @@ header {
 	text-align: left;
 }
 
-@media only screen and (max-width: 1025px) {
+.hidden {
+	display: none;
+}
+
+@media only screen and (max-width: 1050px) {
 	header {
 		height: 100px;
 	}
 
-		header img {
-			margin-top: 37px;
+		header h1 {
+			line-height: 100px;
 		}
 
 		header #MenuButton {
+			margin: 0;
+			float:right;
 			display: block;
 		}
 
 		header menu {
 			right: 0;
-			top: 87px;
+			margin: 0;
+			top: 100px;
+			float: none;
 			width: 200px;
 			height: 100%;
 			position: fixed;
@@ -168,13 +208,13 @@ header {
 			background: #3852A4;
 		}
 
-		.hidden {
-			display: none;
+		header .submenu {
+			top: 100px;
+			right: 200px;
 		}
 
 		header ul {
 			padding: 0;
-			margin-left: 50px;
 		}
 
 		header li {
@@ -183,14 +223,12 @@ header {
 			font-weight: 600;
 			font-variant: small-caps;
 
-			padding: 20px 10px;
+			line-height: 75px;
 			display: list-item;
 			list-style-type: none;
 		}
 
-		header a {
-			color: white;
-			text-decoration: none;
+		header li{
 		}
 
 	#Sponsors {

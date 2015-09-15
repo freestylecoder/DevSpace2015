@@ -11,6 +11,11 @@
 		</article>
 		<article>
 			<h1>Current Sponsors</h1>
+			<h3>Premier</h3>
+			<p style="text-align: center"><a href="http://www.dealnews.com/" target="dealnews"><img src="images/sponsors/dealnews400.png" alt="DealNews" /></a></p>
+			<h3>Sliver</h3>
+			<p style="text-align: center"><a href="http://www.cabinetpaperless.com/" target="cabinet"><img src="images/sponsors/cabinet.png" alt="Cabinet Document Management Solutions" /></a></p>
+			<h3>In-Kind</h3>
 			<p style="text-align: center"><a href="http://www.pluralsight.com" target="pluralsight"><img src="images/sponsors/pluralsight.png" alt="Pluralsight" /></a></p>
 		</article>
 	</section>

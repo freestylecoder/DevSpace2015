@@ -9,20 +9,49 @@
 	<link href="styles/Master.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript">
 		var ApiUrl = '<%= System.Configuration.ConfigurationManager.AppSettings["ApiUrl"] %>';
+		
+		function ClearMenus(e) {
+			document.getElementsByTagName('header')[0].className = '';
 
-		function ToggleMenu(ClickedControl, e) {
-			var MenuControl = document.getElementsByTagName('menu')[0];
+			var Submenus = document.getElementsByClassName('submenu');
 
-			if (ClickedControl.id == 'MenuButton') {
-				if (MenuControl.className == 'hidden') {
-					MenuControl.className = '';
-				} else {
-					MenuControl.className = 'hidden';
-				}
+			for (var i = 0; i < Submenus.length; ++i) {
+				Submenus[i].className = 'submenu hidden';
+			}
+
+			if (window.getComputedStyle(document.getElementById('MenuButton')).display != 'none') {
+				document.getElementById('MainMenu').className = 'hidden';
 			} else {
-				if (e.srcElement != MenuControl) {
-					MenuControl.className = 'hidden';
-				}
+				document.getElementById('MainMenu').className = '';
+			}
+
+			if(e)
+				e.cancelBubble = true;
+		}
+
+		function ToggleMenu(MenuButton, e) {
+			if (document.getElementById('MainMenu').className == 'hidden') {
+				document.getElementById('MainMenu').className = '';
+			} else {
+				ClearMenus(e);
+			}
+
+			e.cancelBubble = true;
+		}
+
+		function ShowMenu(MenuId, Parent, e) {
+			ClearMenus(e);
+
+			document.getElementsByTagName('header')[0].className = 'expanded';
+
+			var Menu = document.getElementById(MenuId);
+			Menu.className = 'submenu';
+
+			if (window.getComputedStyle(document.getElementById('MenuButton')).display == 'none') {
+				Menu.style.left = Parent.offsetLeft + 'px';
+			} else {
+				document.getElementById('MainMenu').className = '';
+				Menu.style.paddingTop = Parent.offsetTop + 'px';
 			}
 
 			e.cancelBubble = true;
@@ -31,17 +60,38 @@
     <asp:ContentPlaceHolder id="HeadPlaceHolder" runat="server" />
 </head>
 
-<body onclick="ToggleMenu(this, event);">
+<body onclick="ClearMenus(event);" onresize="ClearMenus(event);">
 	<header>
-		<a href="Index.aspx"><img src="images/smalllogo.png" alt="Small Logo" /></a>
-		<img id="MenuButton" src="images/Menu.png" style="float:right; margin: 0;" onclick="ToggleMenu(this, event);" />
-		<menu class="hidden">
+		<img id="MenuButton" src="images/Menu.png" onclick="ToggleMenu(this, event);" />
+		<h1 onclick="window.location = 'https://www.devspaceconf.com/';">DevSpace</h1>
+		<menu id="MainMenu">
 			<ul>
-				<li><a href="Speakers.aspx">Speakers</a></li>
-				<li><a href="Sessions.aspx">Sessions</a></li>
-				<li><a href="Sponsors.aspx">Sponsors</a></li>
-				<li><a href="Venue.aspx">Venue</a></li>
-				<li><a href="Tickets.aspx">Tickets</a></li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/';">Home</li>
+				<li onclick="ShowMenu('InfoSubMenu', this, event);">Info</li>
+				<li onclick="ShowMenu('AgendaSubMenu', this, event);">Agenda</li>
+				<li onclick="ShowMenu('LocationSubMenu', this, event);">Location</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Sponsors.aspx';">Sponsors</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Tickets.aspx';">Tickets</li>
+			</ul>
+		</menu>
+		<menu id="InfoSubMenu" class="submenu hidden">
+			<ul>
+				<li onclick="window.location = 'https://www.devspaceconf.com/About.aspx';">About</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Conduct.aspx';">Conduct</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Contact.aspx';">Contact</li>
+			</ul>
+		</menu>
+		<menu id="AgendaSubMenu" class="submenu hidden">
+			<ul>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Schedule.aspx';">Schedule</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Sessions.aspx';">Sessions</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Speakers.aspx';">Speakers</li>
+			</ul>
+		</menu>
+		<menu id="LocationSubMenu" class="submenu hidden">
+			<ul>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Venue.aspx';">Venue</li>
+				<li onclick="window.location = 'https://www.devspaceconf.com/Travel.aspx';">Hotel</li>
 			</ul>
 		</menu>
 	</header>
@@ -51,11 +101,24 @@
 	</section>
 
 	<section id="Sponsors">
-		<h1>Our Sponsors</h1>
-		<p><a href="http://www.pluralsight.com" target="pluralsight"><img src="images/sponsors/pluralsight.png" alt="Pluralsight" /></a></p>
-		<h1>Your Logo Here!</h1>
-		<p>Visit the Sponsors page to learn how you can help DevSpace happen.</p>
+		<article>
+			<h1>Our Sponsors</h1>
+			<h3>Premier</h3>
+			<p><a href="http://www.dealnews.com/" target="dealnews"><img src="images/sponsors/dealnews.png" alt="DealNews" /></a></p>
+			<h3>Silver</h3>
+			<p><a href="http://www.cabinetpaperless.com/" target="cabinet"><img src="images/sponsors/cabinet.png" alt="Cabinet Document Management Solutions" /></a></p>
+			<h3>In-Kind</h3>
+			<p><a href="http://www.pluralsight.com" target="pluralsight"><img src="images/sponsors/pluralsight.png" alt="Pluralsight" /></a></p>
+		</article>
+		<article>
+			<h1>Your Logo Here!</h1>
+			<p>Visit the Sponsors page to learn how you can help DevSpace happen.</p>
+		</article>
 	</section>
+
+	<script type="text/javascript">
+		ClearMenus(event);
+	</script>
 </body>
 
 </html>

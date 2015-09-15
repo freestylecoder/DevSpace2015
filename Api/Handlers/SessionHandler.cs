@@ -49,7 +49,10 @@ namespace DevSpace.Api.Handlers {
 								Request.GetRequestContext().Principal = UserPrincipal;
 							} else {
 								// return 401
-								return new HttpResponseMessage( System.Net.HttpStatusCode.Unauthorized );
+								HttpResponseMessage Response401 = new HttpResponseMessage( System.Net.HttpStatusCode.Unauthorized );
+								Response401.Headers.Add( "Access-Control-Allow-Origin", Request.Headers.GetValues( "Origin" ).First() );
+								Response401.Headers.Add( "Access-Control-Allow-Credentials", "true" );
+								return Response401;
 							}
 						}
 					}

@@ -14,6 +14,17 @@ using DevSpace.Api.Models;
 namespace DevSpace.Api.Controllers {
 	public class SessionsController : ApiController {
 		[AllowAnonymous]
+		public async Task<HttpResponseMessage> Get() {
+			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
+				Connection.Open();
+
+				HttpResponseMessage Response = new HttpResponseMessage( HttpStatusCode.OK );
+				Response.Content = new StringContent( await JsonConvert.SerializeObjectAsync( await Models.Session.Select( Connection ), Formatting.None ) );
+				return Response;
+			}
+		}
+
+		[AllowAnonymous]
 		public async Task<HttpResponseMessage> Get( short Id ) {
 			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
 				Connection.Open();
@@ -24,7 +35,20 @@ namespace DevSpace.Api.Controllers {
 			}
 		}
 
+
 		[AllowAnonymous]
+		[Route( "v1/Sessions/Tags/{Id}" )]
+		public async Task<HttpResponseMessage> GetSessionsByTag( short Id ) {
+			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
+				Connection.Open();
+
+				HttpResponseMessage Response = new HttpResponseMessage( HttpStatusCode.OK );
+				Response.Content = new StringContent( await JsonConvert.SerializeObjectAsync( ( await Models.Session.SelectByTag( Id, Connection ) ).Where( ses => ses.Accepted ).ToList(), Formatting.None ) );
+				return Response;
+			}
+		}
+
+		[Authorize]
 		[Route( "v1/Speakers/{Id}/Sessions" )]
 		public async Task<HttpResponseMessage> GetSpeakerSessions( short Id ) {
 			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
@@ -32,6 +56,18 @@ namespace DevSpace.Api.Controllers {
 
 				HttpResponseMessage Response = new HttpResponseMessage( HttpStatusCode.OK );
 				Response.Content = new StringContent( await JsonConvert.SerializeObjectAsync( await Models.Session.SelectBySpeaker( Id, Connection ), Formatting.None ) );
+				return Response;
+			}
+		}
+
+		[AllowAnonymous]
+		[Route( "v1/Speakers/{Id}/Sessions/Accepted" )]
+		public async Task<HttpResponseMessage> GetSpeakerAcceptedSessions( short Id ) {
+			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
+				Connection.Open();
+
+				HttpResponseMessage Response = new HttpResponseMessage( HttpStatusCode.OK );
+				Response.Content = new StringContent( await JsonConvert.SerializeObjectAsync( ( await Models.Session.SelectBySpeaker( Id, Connection ) ).Where( ses => ses.Accepted ).ToList(), Formatting.None ) );
 				return Response;
 			}
 		}

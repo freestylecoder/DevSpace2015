@@ -17,20 +17,71 @@ namespace DevSpace.Api.Models {
 		[DataMember]public string Title { get; set; }
 		[DataMember]public string Abstract { get; set; }
 		[DataMember]public string Notes { get; set; }
+		[DataMember]public string TimeSlot { get; set; }
 		[DataMember]public List<Tag> Tags { get; set; }
+		public bool Accepted { get; set; }
 		#endregion
 
 		#region Methods
 		#region Static
+		public async static Task<List<Session>> Select( SqlConnection Connection, SqlTransaction Transaction = null ) {
+			List<Session> FoundSessions = new List<Session>();
+			Dictionary<short, short> SpeakerIds = new Dictionary<short, short>();
+
+			using( SqlCommand Command = new SqlCommand() ) {
+				Command.Connection = Connection;
+				if( null != Transaction ) Command.Transaction = Transaction;
+
+				Command.CommandText = "SELECT Sessions.Id, SpeakerId, Title, Abstract, Notes, Accepted, Text AS TimeSlot FROM Sessions LEFT JOIN TimeSlots ON Sessions.TimeSlotId = TimeSlots.Id WHERE Accepted = 1 ORDER BY TimeSlotId, Title;";
+				using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
+					while( DataReader.Read() ) {
+						Session FoundSession = new Session();
+						FoundSession.Id = DataReader.GetInt16( 0 );
+						SpeakerIds.Add( FoundSession.Id, DataReader.GetInt16( 1 ) );
+						FoundSession.Title = DataReader.GetString( 2 );
+						FoundSession.Abstract = DataReader.GetString( 3 );
+						FoundSession.Notes = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 );
+						FoundSession.Accepted = DataReader.IsDBNull( 5 ) ? false : DataReader.GetBoolean( 5 );
+						FoundSession.TimeSlot = DataReader.IsDBNull( 6 ) ? null : DataReader.GetString( 6 );
+						FoundSessions.Add( FoundSession );
+					}
+				}
+			}
+
+			foreach( Session FoundSession in FoundSessions ) { 
+				FoundSession.Speaker = await Speaker.Select( SpeakerIds[FoundSession.Id], Connection );
+
+				FoundSession.Tags = new List<Tag>();
+				using( SqlCommand Command = new SqlCommand() ) {
+					Command.Connection = Connection;
+					if( null != Transaction ) Command.Transaction = Transaction;
+
+					Command.CommandText = "SELECT Id, Text FROM Tags WHERE Id IN ( SELECT TagId FROM SessionTags WHERE SessionId = @SessionId );";
+					Command.Parameters.Add( "SessionId", System.Data.SqlDbType.SmallInt ).Value = FoundSession.Id;
+					using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
+						while( DataReader.Read() ) {
+							FoundSession.Tags.Add( new Tag {
+								Id = DataReader.GetInt16( 0 ),
+								Text = DataReader.GetString( 1 )
+							} );
+						}
+					}
+				}
+			}
+
+			return FoundSessions;
+		}
+
 		public async static Task<Session> Select( int Id, SqlConnection Connection, SqlTransaction Transaction = null ) {
 			short SpeakerId = -1;
 			Session FoundSession = null;
 
 			using( SqlCommand Command = new SqlCommand() ) {
 				Command.Connection = Connection;
-				if( null != Transaction ) Command.Transaction = Transaction;
+				if( null != Transaction )
+					Command.Transaction = Transaction;
 
-				Command.CommandText = "SELECT Id, SpeakerId, Title, Abstract, Notes FROM Sessions WHERE Id = @Id;";
+				Command.CommandText = "SELECT Sessions.Id, SpeakerId, Title, Abstract, Notes, Accepted, Text AS TimeSlot FROM Sessions LEFT JOIN TimeSlots ON Sessions.TimeSlotId = TimeSlots.Id WHERE Sessions.Id = @Id;";
 				Command.Parameters.Add( "Id", System.Data.SqlDbType.SmallInt ).Value = Id;
 				using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
 					if( DataReader.Read() ) {
@@ -39,7 +90,9 @@ namespace DevSpace.Api.Models {
 						SpeakerId = DataReader.GetInt16( 1 );
 						FoundSession.Title = DataReader.GetString( 2 );
 						FoundSession.Abstract = DataReader.GetString( 3 );
-						FoundSession.Notes = DataReader.GetString( 4 );
+						FoundSession.Notes = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 );
+						FoundSession.Accepted = DataReader.IsDBNull( 5 ) ? false : DataReader.GetBoolean( 5 );
+						FoundSession.TimeSlot = DataReader.IsDBNull( 6 ) ? null : DataReader.GetString( 6 );
 					}
 				}
 			}
@@ -50,7 +103,8 @@ namespace DevSpace.Api.Models {
 				FoundSession.Tags = new List<Tag>();
 				using( SqlCommand Command = new SqlCommand() ) {
 					Command.Connection = Connection;
-					if( null != Transaction ) Command.Transaction = Transaction;
+					if( null != Transaction )
+						Command.Transaction = Transaction;
 
 					Command.CommandText = "SELECT Id, Text FROM Tags WHERE Id IN ( SELECT TagId FROM SessionTags WHERE SessionId = @SessionId );";
 					Command.Parameters.Add( "SessionId", System.Data.SqlDbType.SmallInt ).Value = FoundSession.Id;
@@ -74,9 +128,10 @@ namespace DevSpace.Api.Models {
 
 			using( SqlCommand Command = new SqlCommand() ) {
 				Command.Connection = Connection;
-				if( null != Transaction ) Command.Transaction = Transaction;
+				if( null != Transaction )
+					Command.Transaction = Transaction;
 
-				Command.CommandText = "SELECT Id, SpeakerId, Title, Abstract, Notes FROM Sessions WHERE SpeakerId = @Id;";
+				Command.CommandText = "SELECT Sessions.Id, SpeakerId, Title, Abstract, Notes, Accepted, Text AS TimeSlot FROM Sessions LEFT JOIN TimeSlots ON Sessions.TimeSlotId = TimeSlots.Id WHERE SpeakerId = @Id;";
 				Command.Parameters.Add( "Id", System.Data.SqlDbType.SmallInt ).Value = Id;
 				using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
 					while( DataReader.Read() ) {
@@ -85,7 +140,9 @@ namespace DevSpace.Api.Models {
 							Speaker = TheSpeaker,
 							Title = DataReader.GetString( 2 ),
 							Abstract = DataReader.GetString( 3 ),
-							Notes = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 )
+							Notes = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 ),
+							Accepted = DataReader.IsDBNull( 5 ) ? false : DataReader.GetBoolean( 5 ),
+							TimeSlot = DataReader.IsDBNull( 6 ) ? null : DataReader.GetString( 6 )
 						} );
 					}
 				}
@@ -95,7 +152,62 @@ namespace DevSpace.Api.Models {
 				FoundSession.Tags = new List<Tag>();
 				using( SqlCommand Command = new SqlCommand() ) {
 					Command.Connection = Connection;
-					if( null != Transaction ) Command.Transaction = Transaction;
+					if( null != Transaction )
+						Command.Transaction = Transaction;
+
+					Command.CommandText = "SELECT Id, Text FROM Tags WHERE Id IN ( SELECT TagId FROM SessionTags WHERE SessionId = @SessionId );";
+					Command.Parameters.Add( "SessionId", System.Data.SqlDbType.SmallInt ).Value = FoundSession.Id;
+					using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
+						while( DataReader.Read() ) {
+							FoundSession.Tags.Add( new Tag {
+								Id = DataReader.GetInt16( 0 ),
+								Text = DataReader.GetString( 1 )
+							} );
+						}
+					}
+				}
+			}
+
+			return FoundSessions;
+		}
+
+		public async static Task<List<Session>> SelectByTag( short TagId, SqlConnection Connection, SqlTransaction Transaction = null ) {
+			List<Session> FoundSessions = new List<Session>();
+			Dictionary<short, short> SpeakerIds = new Dictionary<short, short>();
+
+			using( SqlCommand Command = new SqlCommand() ) {
+				Command.Connection = Connection;
+				if( null != Transaction )
+					Command.Transaction = Transaction;
+
+				Command.CommandText = "SELECT Sessions.Id, SpeakerId, Title, Abstract, Notes, Accepted, Text AS TimeSlot FROM Sessions LEFT JOIN TimeSlots ON Sessions.TimeSlotId = TimeSlots.Id WHERE Sessions.Id IN ( SELECT DISTINCT SessionId FROM SessionTags WHERE TagId = @TagId ) ORDER BY TimeSlotId, Title;";
+				Command.Parameters.Add( "TagId", System.Data.SqlDbType.SmallInt ).Value = TagId;
+				using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
+					while( DataReader.Read() ) {
+						Session FoundSession = new Session {
+							Id = DataReader.GetInt16( 0 ),
+							Title = DataReader.GetString( 2 ),
+							Abstract = DataReader.GetString( 3 ),
+							Notes = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 ),
+							Accepted = DataReader.IsDBNull( 5 ) ? false : DataReader.GetBoolean( 5 ),
+							TimeSlot = DataReader.IsDBNull( 6 ) ? null : DataReader.GetString( 6 )
+						};
+
+						FoundSessions.Add( FoundSession );
+
+						SpeakerIds.Add( FoundSession.Id, DataReader.GetInt16( 1 ) );
+					}
+				}
+			}
+
+			foreach( Session FoundSession in FoundSessions ) {
+				FoundSession.Speaker = await Speaker.Select( SpeakerIds[FoundSession.Id], Connection );
+
+				FoundSession.Tags = new List<Tag>();
+				using( SqlCommand Command = new SqlCommand() ) {
+					Command.Connection = Connection;
+					if( null != Transaction )
+						Command.Transaction = Transaction;
 
 					Command.CommandText = "SELECT Id, Text FROM Tags WHERE Id IN ( SELECT TagId FROM SessionTags WHERE SessionId = @SessionId );";
 					Command.Parameters.Add( "SessionId", System.Data.SqlDbType.SmallInt ).Value = FoundSession.Id;

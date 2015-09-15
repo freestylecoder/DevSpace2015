@@ -29,6 +29,39 @@ namespace DevSpace.Api.Models {
 
 		#region Methods
 		#region Static
+		public async static Task<List<Speaker>> Select( SqlConnection Connection, SqlTransaction Transaction = null ) {
+			List<Speaker> Speakers = new List<Speaker>();
+
+			using( SqlCommand Command = new SqlCommand() ) {
+				Command.Connection = Connection;
+				if( null != Transaction )
+					Command.Transaction = Transaction;
+
+				Command.CommandText = "SELECT Id, EmailAddress, DisplayName, PasswordHash, Bio, Twitter, Website, DisplayEmail, DisplayTwitter, DisplayWebsite, SessionToken, SessionExpires FROM Speakers WHERE ID IN ( SELECT DISTINCT SpeakerId FROM Sessions WHERE Accepted = 1 ) ORDER BY DisplayName";
+				using( SqlDataReader DataReader = await Command.ExecuteReaderAsync() ) {
+					while( DataReader.Read() ) {
+						Speaker FoundSpeaker = new Speaker();
+						FoundSpeaker.Id = DataReader.GetInt16( 0 );
+						FoundSpeaker.EmailAddress = DataReader.GetString( 1 );
+						FoundSpeaker.DisplayName = DataReader.GetString( 2 );
+						FoundSpeaker.PasswordHash = DataReader.GetSqlBinary( 3 ).Value;
+						FoundSpeaker.Bio = DataReader.IsDBNull( 4 ) ? null : DataReader.GetString( 4 );
+						FoundSpeaker.Twitter = DataReader.IsDBNull( 5 ) ? null : DataReader.GetString( 5 );
+						FoundSpeaker.Website = DataReader.IsDBNull( 6 ) ? null : DataReader.GetString( 6 );
+						FoundSpeaker.DisplayEmail = DataReader.IsDBNull( 7 ) ? false : DataReader.GetBoolean( 7 );
+						FoundSpeaker.DisplayTwitter = DataReader.IsDBNull( 8 ) ? false : DataReader.GetBoolean( 8 );
+						FoundSpeaker.DisplayWebsite = DataReader.IsDBNull( 9 ) ? false : DataReader.GetBoolean( 9 );
+						FoundSpeaker.SessionToken = DataReader.IsDBNull( 10 ) ? Guid.Empty : DataReader.GetGuid( 10 );
+						FoundSpeaker.SessionExpires = DataReader.IsDBNull( 11 ) ? DateTime.MinValue : DataReader.GetDateTime( 11 );
+
+						Speakers.Add( FoundSpeaker );
+					}
+				}
+			}
+
+			return Speakers;
+		}
+
 		public async static Task<Speaker> Select( int Id, SqlConnection Connection, SqlTransaction Transaction = null ) {
 			Speaker FoundSpeaker = null;
 
@@ -141,7 +174,7 @@ namespace DevSpace.Api.Models {
 				if( string.IsNullOrWhiteSpace( NewSpeaker.Twitter ) ) {
 					Command.Parameters.Add( "Twitter", System.Data.SqlDbType.VarChar ).Value = DBNull.Value;
 				} else {
-					Command.Parameters.Add( "Twitter", System.Data.SqlDbType.VarChar ).Value = NewSpeaker.Twitter;
+					Command.Parameters.Add( "Twitter", System.Data.SqlDbType.VarChar ).Value = NewSpeaker.Twitter.TrimStart( new char[] { '@' } );
 				}
 
 				CommandText.Append( ", Website = @Website" );

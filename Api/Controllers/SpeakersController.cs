@@ -14,7 +14,23 @@ using Newtonsoft.Json;
 
 namespace DevSpace.Api.Controllers {
 	public class SpeakersController : ApiController {
-		[Authorize]
+		[AllowAnonymous]
+		public async Task<HttpResponseMessage> Get() {
+			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
+				Connection.Open();
+				List<Models.Speaker> Speakers = await Models.Speaker.Select( Connection );
+
+				if( null == Speakers ) {
+					return new HttpResponseMessage( HttpStatusCode.NotFound );
+				}
+
+				HttpResponseMessage Response = new HttpResponseMessage( HttpStatusCode.OK );
+				Response.Content = new StringContent( await JsonConvert.SerializeObjectAsync( Speakers, Formatting.None ) );
+				return Response;
+			}
+		}
+
+		[AllowAnonymous]
 		public async Task<HttpResponseMessage> Get( int Id ) {
 			using( SqlConnection Connection = new SqlConnection( RoleEnvironment.GetConfigurationSettingValue( "DatabaseConnectionString" ) ) ) {
 				Connection.Open();

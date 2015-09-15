@@ -2,32 +2,31 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
 	<link href="styles/Speakers.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/knockout-3.3.0.js"></script>
+	<script type="text/javascript" src="js/Speakers.js"></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="BodyPlaceHolder" runat="server">
-	<section>
+	<section data-bind="foreach: Profiles">
 		<article>
-			<h1>Call for Speakers Now Open</h1>
-			<p>Our call for speakers is officially open. We will be accepting submissions until July 29th. Speakers will be notified on August 5th. Speakers will be announced on August 10th.</p>
-			<p>To submit your sessions, click the giant, gawdy button below.</p>
-			<input type="button" onclick="window.location = './Login.aspx';" value="Call For Speakers" />
-			<h3>FAQ</h3>
-			<h2>What topics are you looking for?</h2>
+			<h1 data-bind="text: DisplayName"></h1>
+			<p data-bind="text: Bio"></p>
+			<!-- ko if: Twitter || Website -->
 			<p>
-				We want DevSpace to be about community.
-				The conversation is almost as important as the content.
-				As such, we want speakers and attendees from every area.
-				This shouldn't be limited to development technologies.
-				Talks on design, management, planning, personal improvement, and anything else you can think up will be accepted.
+				<!-- ko if: Twitter -->
+				<a target="_blank" data-bind="text: Twitter, attr: { href: TwitterLink }"></a>
+				<!-- /ko -->
+				<!-- ko if: Website -->
+				<!-- ko if: Twitter -->
+				<br />
+				<!-- /ko -->
+				<a target="_blank" data-bind="text: Website, attr: { href: Website }"></a>
+				<!-- /ko -->
 			</p>
-			<h2>What incentives will I get as a speaker?</h2>
-			<p>
-				As a first year non-profit, there is not much I can offer.
-				I will promise you a free ticket to the event.
-				I will also offer you free breakfast, lunch, and snacks.
-				Unfortunately, that is all I can promise.
-				If a sponsor steps up, I would like to have one dinner, as well.
-				Anything else will be decided by the remaining budget as we approach the event.
+			<!-- /ko -->
+			<h1>Sessions</h1>
+			<p data-bind="foreach: Sessions">
+				<span><a data-bind="text: Title, attr: { href: Link }"></a></span><br />
 			</p>
 		</article>
 	</section>

@@ -126,6 +126,8 @@
   <ItemGroup>
     <Content Include="Scripts\Create.sql" />
     <Content Include="Scripts\Update01.sql" />
+    <Content Include="Scripts\Update02.sql" />
+    <Content Include="Scripts\Update03.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
